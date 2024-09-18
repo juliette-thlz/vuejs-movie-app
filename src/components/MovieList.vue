@@ -17,9 +17,14 @@
           <v-card-text>
             {{ movie.overview.length > 100 ? movie.overview.substring(0, 100) + '...' : movie.overview }}
           </v-card-text>
+          <v-btn @click="showDetail(movie.id)">PLUS D'INFORMATIONS</v-btn>
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- <MyPopup v-model="isPopupVisible" subtitle="Voici un sous-titre">
+        <p>Contenu de la pop-up.</p>
+    </MyPopup>   -->
 
     <!-- Message de chargement si aucun film n'est récupéré -->
     <v-row v-if="movieList.length === 0">
@@ -36,19 +41,29 @@ import config from '../../config.json';
 
 let movieList = ref([]);
 let photo_path = config.photo_path;
+let isPopupVisible = ref(false);
 
 onMounted(() => {
-  axios.get(' https://api.themoviedb.org/3/movie/popular', {
+  axios.get(config.movie_list, {
     params: {
       api_key: config.api_key
     }
   })
   .then((response) => {
+    console.log(response.data);
       movieList.value = response.data.results;
     })
     .catch((error) => {
       console.error('Erreur lors de la récupération des données:', error)
     })
 })
+
+const emit = defineEmits(['showMovieDetailEmit']);
+
+const showDetail = (movieId) => {
+    console.log("show details", movieId);
+    // isPopupVisible.value = true;
+    emit('showMovieDetailEmit', movieId, true);
+}
 
 </script>
