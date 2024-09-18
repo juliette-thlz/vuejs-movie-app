@@ -3,8 +3,8 @@
 
     </div>
 </template>
-<script>
-export default {
-    name: 'MovieSearch',
-}
+<script setup>
+// export default {
+//     name: 'MovieSearch',
+// }
 </script>
