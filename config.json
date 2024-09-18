@@ -1,0 +1,7 @@
+{
+    "movie_list": "https://api.themoviedb.org/3/movie/popular",
+    "movie_detail": "https://api.themoviedb.org/3/movie/",
+    "photo_path": "https://image.tmdb.org/t/p/w500/",
+    "api_key": ""
+}
+
