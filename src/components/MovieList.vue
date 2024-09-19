@@ -1,8 +1,8 @@
 <template>
 <v-container>
-    <v-row>
+    <v-row v-if="movieFiltered && movieFiltered.length > 0">
       <!-- Boucle sur la liste des films -->
-      <v-col v-for="movie in movieList" :key="movie.id" cols="12" md="4" lg="3">
+      <v-col v-for="movie in movieFiltered" :key="movie.id" cols="12" md="4" lg="3">
         <v-card>
           <v-img
             :src="photo_path + movie.poster_path"
@@ -22,21 +22,31 @@
       </v-col>
     </v-row>
     <!-- Message de chargement si aucun film n'est récupéré -->
-    <v-row v-if="movieList.length === 0">
+    <v-row v-else>
       <v-col cols="12" class="text-center">
         <p>Chargement...</p>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps, computed } from 'vue';
 import axios from 'axios';
 import config from '../config.json';
 
 let movieList = ref([]);
 let photo_path = config.url.photo_path;
 
+// Props pour récupérer la valeur entrée dans la barre de recherche
+const props = defineProps ({
+    movieSearch: {
+      type: String,
+      required: true
+    }
+})
+
+// On récupère les listes avec une requête
 onMounted(() => {
   axios.get(config.url.movie_list, {
     params: {
@@ -44,7 +54,6 @@ onMounted(() => {
     }
   })
   .then((response) => {
-    console.log(response.data);
       movieList.value = response.data.results;
     })
     .catch((error) => {
@@ -54,9 +63,24 @@ onMounted(() => {
 
 const emit = defineEmits(['movie-detail']);
 
+// Fonction appelée sur le clic du bouton pour afficher les détails
+// Elle émet un évement avec l'id du film
 const showDetail = (movieId) => {
-    console.log("show details", movieId);
-    emit('movie-detail', movieId);
+  console.log("show details", movieId);
+  emit('movie-detail', movieId);
 }
+
+
+// Permet de retourner la liste de film si la recherche est vide, et seulement les films qui correspondent à la recherche
+const movieFiltered = computed(() => {
+  // Si la recherche est vide, retourne tous les films
+  if (props.movieSearch === '') {
+    return movieList.value;
+  }
+  // Sinon, retourne les films filtrés
+  return movieList.value.filter(movie =>
+    movie.title.toLowerCase().includes(String(props.movieSearch).toLowerCase())
+  );
+});
 
 </script>

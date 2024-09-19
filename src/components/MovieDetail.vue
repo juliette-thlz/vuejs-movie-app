@@ -25,7 +25,6 @@ import config from '../config.json';
 
 let movieDetails = ref({});
 
-
 const props = defineProps ({
     movieId: {
       type: Number,
@@ -37,8 +36,7 @@ const props = defineProps ({
     }
 })
 
-console.log(props.isVisible);
-
+// Requête pour avoir les infos d'un film d'après son id
 onMounted(() => {
   axios.get(config.url.movie_detail + props.movieId, {
     params: {
@@ -56,9 +54,9 @@ onMounted(() => {
 
 const emit = defineEmits(['closePopUp']);
 
+// Emet un événement au clic du bouton de fermeture
 const closeDetail = () => {
-  console.log("on close");
-  emit('closePopUp', false);
+  emit('closePopUp');
 }
 
 </script>
