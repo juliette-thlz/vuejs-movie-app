@@ -21,11 +21,6 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <!-- <MyPopup v-model="isPopupVisible" subtitle="Voici un sous-titre">
-        <p>Contenu de la pop-up.</p>
-    </MyPopup>   -->
-
     <!-- Message de chargement si aucun film n'est récupéré -->
     <v-row v-if="movieList.length === 0">
       <v-col cols="12" class="text-center">
@@ -37,14 +32,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import config from '../../config.json';
+import config from '../config.json';
 
 let movieList = ref([]);
-let photo_path = config.photo_path;
-let isPopupVisible = ref(false);
+let photo_path = config.url.photo_path;
 
 onMounted(() => {
-  axios.get(config.movie_list, {
+  axios.get(config.url.movie_list, {
     params: {
       api_key: config.api_key
     }
@@ -58,12 +52,11 @@ onMounted(() => {
     })
 })
 
-const emit = defineEmits(['showMovieDetailEmit']);
+const emit = defineEmits(['movie-detail']);
 
 const showDetail = (movieId) => {
     console.log("show details", movieId);
-    // isPopupVisible.value = true;
-    emit('showMovieDetailEmit', movieId, true);
+    emit('movie-detail', movieId);
 }
 
 </script>

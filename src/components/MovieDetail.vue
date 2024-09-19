@@ -1,18 +1,17 @@
 <template>
     <div>
-        
-        <v-dialog v-model="isVisible" max-width="500px">
+        <v-dialog v-model="props.isVisible" max-width="500px">
         <v-card>
-        <v-card-title class="headline">Titre de la Pop-Up</v-card-title>
+        <v-card-title class="headline">{{ movieDetails.title }}</v-card-title>
         <v-card-subtitle>
             {{ subtitle }}
         </v-card-subtitle>
         <v-card-text>
-            <slot></slot> <!-- Contenu dynamique à insérer dans la pop-up -->
+          <p>{{ movieDetails.overview }}</p>
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="close">Fermer</v-btn>
+            <v-btn color="primary" @click="closeDetail">Fermer</v-btn>
         </v-card-actions>
         </v-card>
     </v-dialog>
@@ -20,30 +19,34 @@
     </div>
 </template>
 <script setup>
-import { ref, defineProps, defineEmits, onMounted } from 'vue';
+import { ref, watch, defineProps, defineEmits, onMounted } from 'vue';
 import axios from 'axios';
-import config from '../../config.json';
+import config from '../config.json';
 
-let movieDetails = ref([])
+let movieDetails = ref({});
+
 
 const props = defineProps ({
     movieId: {
-      type: String,
+      type: Number,
       required: true
     },
-    modelValue: {
-        type: Boolean,
-        required: true
+    isVisible: {
+      type: Boolean,
+      required: true
     }
 })
 
+console.log(props.isVisible);
+
 onMounted(() => {
-  axios.get(config.movie_detail + props.movieId, {
+  axios.get(config.url.movie_detail + props.movieId, {
     params: {
       api_key: config.api_key
     }
   })
   .then((response) => {
+      console.log(response.data);
       movieDetails.value = response.data;
     })
     .catch((error) => {
@@ -51,11 +54,11 @@ onMounted(() => {
     })
 })
 
-const emit = defineEmits(['close-detail']);
+const emit = defineEmits(['closePopUp']);
 
 const closeDetail = () => {
-    // console.log("envoi add");
-    emit('close-detail');
+  console.log("on close");
+  emit('closePopUp', false);
 }
 
 </script>

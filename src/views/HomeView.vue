@@ -1,9 +1,8 @@
 <template>
     <MovieSearch />
-    <MovieList />
     <!-- <MoviePagination /> -->
-    <MovieList @showMovieDetailEmit="openMovieDetail"/>
-    <MovieDetail :movieId="selectedMovieId" v-model:modelValue="isPopupVisible" />
+    <MovieList @movie-detail="openMovieDetail" />
+    <MovieDetail v-if="isPopupVisible" :movieId="selectedMovieId" :isVisible="isPopupVisible" @closePopUp="closeMovieDetail" />
 </template>
 
 <script setup>
@@ -14,25 +13,22 @@ import MoviePagination from '../components/MoviePagination.vue'
 import MovieSearch from '../components/MovieSearch.vue'
 
 const isPopupVisible = ref(false);
-// const selectedMovieId = ref(null);
-const props = defineProps ({
-    movieId: {
-      type: String,
-      required: true
-    },
-    modelValue: {
-        type: Boolean,
-        required: true
-    }
-})
+const selectedMovieId = ref(null);
 
-const emit = defineEmits(['showPopUp']);
+const emit = defineEmits(['openMovieDetail']);
 
 const openMovieDetail = (movieId) => {
-    console.log("openMovieDetail", movieId);
+    
     selectedMovieId.value = movieId;
     isPopupVisible.value = true;
-    emit('showPopUp');
+    console.log("openMovieDetail called with movieId:", movieId, isPopupVisible.value);
+    emit('openMovieDetail', false);
+};
+
+const closeMovieDetail = () => {
+
+    isPopupVisible.value = false;
+    console.log("closeMovieDetail called");
 };
 
 </script>
