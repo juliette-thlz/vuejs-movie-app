@@ -3,9 +3,6 @@
         <v-dialog v-model="props.isVisible" max-width="500px">
         <v-card>
         <v-card-title class="headline">{{ movieDetails.title }}</v-card-title>
-        <v-card-subtitle>
-            {{ subtitle }}
-        </v-card-subtitle>
         <v-card-text>
           <p>{{ movieDetails.overview }}</p>
         </v-card-text>

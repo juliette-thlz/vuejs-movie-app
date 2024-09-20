@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, computed } from 'vue';
+import { ref, watch, onMounted, defineProps, computed } from 'vue';
 import axios from 'axios';
 import config from '../config.json';
 
@@ -43,12 +43,16 @@ const props = defineProps ({
     movieSearch: {
       type: String,
       required: true
+    },
+    currentPage: {
+      type: Number,
+      required: true
     }
 })
 
 // On récupère les listes avec une requête
-onMounted(() => {
-  axios.get(config.url.movie_list, {
+const fetchMovies = () => {
+  axios.get(config.url.movie_list + props.currentPage, {
     params: {
       api_key: config.api_key
     }
@@ -59,7 +63,17 @@ onMounted(() => {
     .catch((error) => {
       console.error('Erreur lors de la récupération des données:', error)
     })
-})
+};
+
+// Appeler la fonction au lancement du composant
+onMounted(() => {
+  fetchMovies();
+});
+
+// Surveille les changements de page et fais la requête à chaque changement
+watch(() => props.currentPage, () => {
+  fetchMovies();
+});
 
 const emit = defineEmits(['movie-detail']);
 
