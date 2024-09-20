@@ -27,18 +27,18 @@ const openMovieDetail = (movieId) => {
 // Au déclenchement de l'événement pour fermer la pop-up dans movieDetail, on cache la pop-up
 const closeMovieDetail = () => {
     isPopupVisible.value = false;
-    console.log("closeMovieDetail called");
+    //console.log("closeMovieDetail called");
 };
 
 // Permet de passer la valeur de recherche (dans movieSearch) à la props de movieList
 const setMovieSearch = (data) => {
     movieSearchData.value = data;
-    console.log("setMovieSearch", movieSearchData.value);
+    //console.log("setMovieSearch", movieSearchData.value);
 }
 
 // Permet de passer le numéro de page (dans moviePagination) à la props de movieList
 const changePage = (page) => {
-    console.log("changePage", page);
+    //console.log("changePage", page);
     pageNumber.value = page;
 }
 
